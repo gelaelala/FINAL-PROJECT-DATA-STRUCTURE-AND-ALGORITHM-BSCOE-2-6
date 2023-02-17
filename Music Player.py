@@ -61,6 +61,16 @@ def load_music():
 
 def add_song ():
     pass
+    '''
+    global current_song
+    files = filedialog.askopenfilename(initialdir = "/", title = "Select Audio/s", filetypes = (("mp3 File", "*.mp3"), (".wav File", "*.wav")))
+
+    songlist.insert ("end", files)
+    '''
+
+def remove_song ():
+    songlist.delete (ANCHOR)
+    pygame.mixer.music.stop()
 
 def play_music ():
     global current_song, paused
@@ -127,8 +137,13 @@ addSong_menu = Menu(menubar, tearoff = False)
 addSong_menu.add_command(label = 'Add Song', command = add_song)
 menubar.add_cascade (label = "Add", menu = addSong_menu)
 
+# remove songs from the playlist
+removeSong_menu = Menu (menubar, tearoff = False)
+removeSong_menu.add_command (label = "Remove Song", command = remove_song)
+menubar.add_cascade (label = "Remove", menu = removeSong_menu)
+
 # creating list box for the songs
-songlist = Listbox(window, bg = 'black', fg = 'white', width = 100, height = 15)
+songlist = Listbox(window, bg = 'black', fg = 'white', selectbackground = "gray", width = 100, height = 15)
 songlist.pack()
 
 # import images for buttons
