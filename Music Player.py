@@ -10,6 +10,15 @@ window.geometry("500x300")
 # initialize pygame music mixer
 pygame.mixer.init()
 
+# creating menu bar
+menubar = Menu (window)
+window.config (menu = menubar)
+
+# organise menu
+organize_menu = Menu(menubar, tearoff = False)
+organize_menu.add_command(label = 'Select Folder')
+menubar.add_cascade (label = 'Organize', menu = organize_menu)
+
 # creating list box for the songs
 songlist = Listbox(window, bg = 'black', fg = 'white', width = 100, height = 15)
 songlist.pack()
