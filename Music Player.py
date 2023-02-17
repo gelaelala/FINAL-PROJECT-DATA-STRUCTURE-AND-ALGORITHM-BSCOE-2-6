@@ -1,3 +1,4 @@
+from tkinter import filedialog
 from tkinter import *
 import pygame
 import os
@@ -14,9 +15,32 @@ pygame.mixer.init()
 menubar = Menu (window)
 window.config (menu = menubar)
 
+songs = []
+current_song = ""
+paused = False
+
+# creating load music command
+def load_music():
+    global current_song
+    window.directory = filedialog.askdirectory()
+
+    """ iterating over files in chosen directory, splitting up filename into the filename itself and filename ext, 
+    and if the filename ext is mp3 then add the song into the songs list """
+    for song in os.listdir(window.directory):
+        name, ext = os.path.splitext(song)
+        if ext == '.mp3':
+            songs.append(song)
+
+    # add songs into the listbox
+    for song in songs:
+        songlist.insert ("end", song)
+    
+    songlist.select_set(0) # selecting the first song on the playlist
+    current_song = songs[songlist.curselection()[0]]
+
 # organise menu
 organize_menu = Menu(menubar, tearoff = False)
-organize_menu.add_command(label = 'Select Folder')
+organize_menu.add_command(label = 'Select Folder', command = load_music)
 menubar.add_cascade (label = 'Organize', menu = organize_menu)
 
 # creating list box for the songs
