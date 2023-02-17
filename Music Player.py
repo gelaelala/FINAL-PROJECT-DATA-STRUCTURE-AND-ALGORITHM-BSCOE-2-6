@@ -4,6 +4,7 @@ from tkinter import filedialog
 from tkinter import *
 import pygame
 import os
+import random
 
 # creating window for the application
 window = Tk()
@@ -19,6 +20,7 @@ window.config (menu = menubar)
 
 songs = []
 current_song = ""
+song_number = 0
 paused = False
 
 # creating load music command
@@ -37,8 +39,8 @@ def load_music():
     for song in songs:
         songlist.insert ("end", song)
     
-    songlist.select_set(0) # selecting the first song on the playlist
-    current_song = songs[songlist.curselection()[0]]
+    songlist.select_set(song_number) # selecting the first song on the playlist
+    current_song = songs[songlist.curselection()[song_number]]
 
 def play_music ():
     global current_song, paused
@@ -71,14 +73,19 @@ def next_music ():
 
     try:
         songlist.select_clear (0, END)
-        songlist.select_set (songs.index(current_song) + 1)
+        songlist.selection_set (songs.index(current_song) + 1)
         current_song = songs[songlist.curselection()[0]]
         play_music ()
     except:
         pass
 
 def shuffle_music ():
-    pass
+    global current_song, paused
+
+    random.shuffle (songs)
+    songlist.select_set (songs.index(current_song))
+    current_song = songs[songlist.curselection()[song_number]]
+    play_music ()
 
 def repeat_music ():
     pass
