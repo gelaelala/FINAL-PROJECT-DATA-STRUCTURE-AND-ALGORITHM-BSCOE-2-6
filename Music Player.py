@@ -39,8 +39,8 @@ def load_music():
     for song in songs:
         songlist.insert ("end", song)
     
-    songlist.select_set(song_number) # selecting the first song on the playlist
-    current_song = songs[songlist.curselection()[song_number]]
+    songlist.select_set(0) # selecting the first song on the playlist
+    current_song = songs[songlist.curselection()[0]]
 
 def play_music ():
     global current_song, paused
