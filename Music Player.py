@@ -77,6 +77,12 @@ def next_music ():
     except:
         pass
 
+def shuffle_music ():
+    pass
+
+def repeat_music ():
+    pass
+
 # organise menu
 organize_menu = Menu(menubar, tearoff = False)
 organize_menu.add_command(label = 'Select Folder', command = load_music)
@@ -91,6 +97,8 @@ play_btn_image = PhotoImage(file = 'play.png')
 pause_btn_image = PhotoImage(file = 'pause.png')
 previous_btn_image = PhotoImage(file = 'previous.png')
 next_btn_image = PhotoImage(file ='next.png')
+shuffle_btn_image = PhotoImage(file = 'shuffle.png')
+repeat_btn_image = PhotoImage(file = "repeat.png")
 
 # creating frames for control buttons
 control_frame = Frame(window)
@@ -101,12 +109,16 @@ play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, comma
 pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0, command = pause_music)
 previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 0, command = previous_music)
 next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, command = next_music)
+shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
+repeat_btn = Button (control_frame, image = repeat_btn_image, borderwidth = 0, command = repeat_music)
 
 # displaying the buttons on screen
-play_btn.grid (row = 0, column = 1, padx = 7, pady = 10)
-pause_btn.grid (row = 0, column = 2, padx = 7, pady = 10)
-previous_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
-next_btn.grid (row = 0, column = 3, padx = 7, pady = 10)
+play_btn.grid (row = 0, column = 2, padx = 7, pady = 10)
+pause_btn.grid (row = 0, column = 3, padx = 7, pady = 10)
+previous_btn.grid (row = 0, column = 1, padx = 7, pady = 10)
+next_btn.grid (row = 0, column = 4, padx = 7, pady = 10)
+shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
+repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 10)
 
 # runs the application
 window.mainloop()
