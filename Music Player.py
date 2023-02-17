@@ -59,6 +59,9 @@ def load_music():
     songlist.select_set(0) # selecting the first song on the playlist
     current_song = songs[songlist.curselection()[0]]
 
+def add_song ():
+    pass
+
 def play_music ():
     global current_song, paused
 
@@ -114,10 +117,15 @@ def repeat_music ():
 def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
 
-# organise menu
-organize_menu = Menu(menubar, tearoff = False)
-organize_menu.add_command(label = 'Select Folder', command = load_music)
-menubar.add_cascade (label = 'Organize', menu = organize_menu)
+# select folder menu
+select_menu = Menu(menubar, tearoff = False)
+select_menu.add_command(label = 'Select Folder', command = load_music)
+menubar.add_cascade (label = 'Playlist', menu = select_menu)
+
+# manually add songs
+addSong_menu = Menu(menubar, tearoff = False)
+addSong_menu.add_command(label = 'Add Song', command = add_song)
+menubar.add_cascade (label = "Add", menu = addSong_menu)
 
 # creating list box for the songs
 songlist = Listbox(window, bg = 'black', fg = 'white', width = 100, height = 15)
