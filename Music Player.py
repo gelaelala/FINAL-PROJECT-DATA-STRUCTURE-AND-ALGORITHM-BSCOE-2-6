@@ -1,3 +1,5 @@
+# program reference before modifications: https://youtu.be/SCos1o368iE
+
 from tkinter import filedialog
 from tkinter import *
 import pygame
@@ -38,6 +40,43 @@ def load_music():
     songlist.select_set(0) # selecting the first song on the playlist
     current_song = songs[songlist.curselection()[0]]
 
+def play_music ():
+    global current_song, paused
+
+    if not paused:
+        pygame.mixer.music.load(os.path.join(window.directory, current_song))
+        pygame.mixer.music.play()
+    else:
+        pygame.mixer.music.unpause()
+        paused = False
+    
+def pause_music ():
+    global paused 
+    pygame.mixer.music.pause()
+    paused = True
+
+def previous_music ():
+    global current_song, paused
+
+    try:
+        songlist.selection_clear(0, END)
+        songlist.selection_set(songs.index(current_song) - 1)
+        current_song = songs[songlist.curselection()[0]]
+        play_music()
+    except:
+        pass
+
+def next_music ():
+    global current_song, paused
+
+    try:
+        songlist.select_clear (0, END)
+        songlist.select_set (songs.index(current_song) + 1)
+        current_song = songs[songlist.curselection()[0]]
+        play_music ()
+    except:
+        pass
+
 # organise menu
 organize_menu = Menu(menubar, tearoff = False)
 organize_menu.add_command(label = 'Select Folder', command = load_music)
@@ -57,17 +96,17 @@ next_btn_image = PhotoImage(file ='next.png')
 control_frame = Frame(window)
 control_frame.pack()
 
-# creating the buttons themselves inside the frame
-play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0)
-pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0)
-previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 0)
-next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0)
+# creating the buttons themselves inside the frame and making it functional
+play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, command = play_music)
+pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0, command = pause_music)
+previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 0, command = previous_music)
+next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, command = next_music)
 
 # displaying the buttons on screen
 play_btn.grid (row = 0, column = 1, padx = 7, pady = 10)
 pause_btn.grid (row = 0, column = 2, padx = 7, pady = 10)
-previous_btn.grid (row = 0, column = 3, padx = 7, pady = 10)
-next_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
+previous_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
+next_btn.grid (row = 0, column = 3, padx = 7, pady = 10)
 
 # runs the application
 window.mainloop()
