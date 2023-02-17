@@ -2,9 +2,12 @@
 
 from tkinter import filedialog
 from tkinter import *
+from tkinter import ttk
+from mutagen.mp3 import MP3
 import pygame
 import os
 import random
+import time
 
 # creating window for the application
 window = Tk()
@@ -22,6 +25,20 @@ songs = []
 current_song = ""
 song_number = 0
 paused = False
+volume = ''
+
+'''
+# creating function for getting the total length of the song and to display on screen
+def total_length ():
+    global current_song, paused
+    
+    current_song = songs[songlist.curselection()[0]]
+    song_mp3 = MP3(current_song)
+    song_length = song_mp3.info.length
+    convert_song_length = time.strftime('%M:%S', time.gmtime(song_length))
+
+    time_bar.config(text = convert_song_length)
+'''
 
 # creating load music command
 def load_music():
@@ -51,6 +68,8 @@ def play_music ():
     else:
         pygame.mixer.music.unpause()
         paused = False
+    
+    #total_length ()
     
 def pause_music ():
     global paused 
@@ -90,7 +109,10 @@ def shuffle_music ():
 def repeat_music ():
     global current_song, paused
 
-    pygame.mixer.music.play (-1)
+    pygame.mixer.music.play (-1) # song will be indefinitely repeated
+
+def music_volume (vol):
+    pygame.mixer.music.set_volume(volume_control.get())
 
 # organise menu
 organize_menu = Menu(menubar, tearoff = False)
@@ -113,6 +135,12 @@ repeat_btn_image = PhotoImage(file = "repeat.png")
 control_frame = Frame(window)
 control_frame.pack()
 
+'''
+# creating frame for total lenght of the song and its current time
+time_bar = Label(window, text = "", padx = 10, anchor = W)
+time_bar.pack(fill = X, side = BOTTOM, pady = 2)
+'''
+
 # creating the buttons themselves inside the frame and making it functional
 play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, command = play_music)
 pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0, command = pause_music)
@@ -120,6 +148,7 @@ previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 
 next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, command = next_music)
 shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
 repeat_btn = Button (control_frame, image = repeat_btn_image, borderwidth = 0, command = repeat_music)
+volume_control = ttk.Scale(control_frame, from_ = 1, to = 0, value = 1, orient = HORIZONTAL, length = 125, command = music_volume)
 
 # displaying the buttons on screen
 play_btn.grid (row = 0, column = 2, padx = 7, pady = 10)
@@ -128,6 +157,7 @@ previous_btn.grid (row = 0, column = 1, padx = 7, pady = 10)
 next_btn.grid (row = 0, column = 4, padx = 7, pady = 10)
 shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
 repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 10)
+volume_control.grid (row = 0, column = 6, padx = 7, pady = 10)
 
 # runs the application
 window.mainloop()
