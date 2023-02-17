@@ -72,6 +72,10 @@ def remove_song ():
     songlist.delete (ANCHOR)
     pygame.mixer.music.stop()
 
+def remove_playlist ():
+    songlist.delete (0, "end")
+    pygame.mixer.music.stop ()
+
 def play_music ():
     global current_song, paused
 
@@ -137,9 +141,10 @@ addSong_menu = Menu(menubar, tearoff = False)
 addSong_menu.add_command(label = 'Add Song', command = add_song)
 menubar.add_cascade (label = "Add", menu = addSong_menu)
 
-# remove songs from the playlist
+# remove songs from the playlist/remove entire playlist
 removeSong_menu = Menu (menubar, tearoff = False)
 removeSong_menu.add_command (label = "Remove Song", command = remove_song)
+removeSong_menu.add_command (label = "Remove Playlist", command = remove_playlist)
 menubar.add_cascade (label = "Remove", menu = removeSong_menu)
 
 # creating list box for the songs
