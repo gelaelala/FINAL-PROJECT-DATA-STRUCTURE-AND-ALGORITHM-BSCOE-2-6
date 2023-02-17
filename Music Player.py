@@ -32,7 +32,7 @@ def load_music():
     and if the filename ext is mp3 then add the song into the songs list """
     for song in os.listdir(window.directory):
         name, ext = os.path.splitext(song)
-        if ext == '.mp3':
+        if ext == '.mp3' or '.wav':
             songs.append(song)
 
     # add songs into the listbox
@@ -88,7 +88,9 @@ def shuffle_music ():
     play_music ()
 
 def repeat_music ():
-    pass
+    global current_song, paused
+
+    pygame.mixer.music.play (-1)
 
 # organise menu
 organize_menu = Menu(menubar, tearoff = False)
