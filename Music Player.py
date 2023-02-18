@@ -29,7 +29,7 @@ song_number = 0
 paused = False
 volume = ''
 
-# creating function for getting the total length of the song and to display on screen
+# creating function for getting the total length of the song and to display on screen as well as for the application's timebar
 def song_time ():
     global current_song, paused, total_length
     
@@ -41,9 +41,13 @@ def song_time ():
     total_length = song.info.length
     total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))  # converting the time into MINUTES:SECONDS format instead of seconds only
     
-    current_time += 1
+    current_time += 1 # increases the current time by one second
+
+    # if-else conditions for the timebar and the current timestamp of the song that's playing
     if int(timebar.get()) == int(total_length):
         time_song.config(text = f'{total_length_cnvrt} / {total_length_cnvrt}')
+    elif paused:
+        pass
     elif int(timebar.get()) == int(current_time):
         timebar_position = int(total_length)
         timebar.config(to = timebar_position, value = int(current_time))
@@ -166,6 +170,11 @@ def repeat_music ():
 
     pygame.mixer.music.play (-1) # song will be indefinitely repeated
 
+def stop_music ():
+    time_song.config(text = '')
+    timebar.config (value = 0)
+    pygame.mixer.music.stop()
+    
 def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
 
@@ -197,6 +206,7 @@ songlist.pack(fill = BOTH, expand = True)
 # import images for buttons
 play_btn_image = PhotoImage(file = 'play.png')
 pause_btn_image = PhotoImage(file = 'pause.png')
+stop_btn_image = PhotoImage(file = "stop.png")
 previous_btn_image = PhotoImage(file = 'previous.png')
 next_btn_image = PhotoImage(file ='next.png')
 shuffle_btn_image = PhotoImage(file = 'shuffle.png')
@@ -214,6 +224,7 @@ time_song.pack (fill = X, side = BOTTOM, ipady = 10)
 # creating the buttons themselves inside the frame and making it functional
 play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, command = play_music)
 pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0, command = pause_music)
+stop_btn = Button (control_frame, image = stop_btn_image, borderwidth = 0, command = stop_music)
 previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 0, command = previous_music)
 next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, command = next_music)
 shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
@@ -224,12 +235,13 @@ timebar = ttk.Scale(control_frame, from_ = 0, to = 100, orient = HORIZONTAL, val
 # displaying the buttons on screen
 play_btn.grid (row = 0, column = 2, padx = 7, pady = 15, sticky = NSEW)
 pause_btn.grid (row = 0, column = 3, padx = 7, pady = 15, sticky = NSEW)
+stop_btn.grid (row = 0, column = 4, padx = 7, pady = 15, sticky = NSEW)
 previous_btn.grid (row = 0, column = 1, padx = 7, pady = 15, sticky = NSEW)
-next_btn.grid (row = 0, column = 4, padx = 7, pady = 15, sticky = NSEW)
+next_btn.grid (row = 0, column = 5, padx = 7, pady = 15, sticky = NSEW)
 shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 15, sticky = NSEW)
-repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 15, sticky = NSEW)
-volume_control.grid (row = 0, column = 6, padx = 7, pady = 15, sticky = NSEW)
-timebar.grid (row = 1, column = 0, columnspan = 7, pady = 10)
+repeat_btn.grid (row = 0, column = 6, padx = 7, pady = 15, sticky = NSEW)
+volume_control.grid (row = 0, column = 7, padx = 7, pady = 15, sticky = NSEW)
+timebar.grid (row = 1, column = 0, columnspan = 8, pady = 10)
 
 # runs the application
 window.mainloop()
