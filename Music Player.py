@@ -12,7 +12,8 @@ import time
 # creating window for the application
 window = Tk()
 window.title('Music Player')
-window.geometry("500x300")
+window.geometry("700x300")
+window.resizable (True, True)
 
 # initialize pygame music mixer
 pygame.mixer.init()
@@ -69,8 +70,13 @@ def add_song ():
     '''
 
 def remove_song ():
+    global current_song
+
     songlist.delete (ANCHOR)
     pygame.mixer.music.stop()
+    songlist.selection_set (songs.index(current_song) + 1)
+    current_song = songs[songlist.curselection()[0]]
+    play_music()
 
 def remove_playlist ():
     songlist.delete (0, "end")
@@ -97,10 +103,16 @@ def previous_music ():
     global current_song, paused
 
     try:
-        songlist.selection_clear(0, END)
-        songlist.selection_set(songs.index(current_song) - 1)
-        current_song = songs[songlist.curselection()[0]]
-        play_music()
+        songlist_length = songlist.size()
+        if songs.index(current_song) == 0:
+            songlist.selection_set(songlist_length- 1)
+            current_song = songs[songlist.curselection()[-1]]
+            play_music() 
+        else:
+            songlist.selection_clear(0, END)
+            songlist.selection_set(songs.index(current_song) - 1)
+            current_song = songs[songlist.curselection()[0]]
+            play_music()
     except:
         pass
 
@@ -108,10 +120,16 @@ def next_music ():
     global current_song, paused
 
     try:
-        songlist.select_clear (0, END)
-        songlist.selection_set (songs.index(current_song) + 1)
-        current_song = songs[songlist.curselection()[0]]
-        play_music ()
+        songlist_length = songlist.size()
+        if songlist_length-1 == songs.index(current_song):
+            songlist.selection_set(0)
+            current_song = songs[songlist.curselection()[0]]
+            play_music() 
+        else:
+            songlist.select_clear (0, END)
+            songlist.selection_set (songs.index(current_song) + 1)
+            current_song = songs[songlist.curselection()[0]]
+            play_music ()
     except:
         pass
 
@@ -148,8 +166,8 @@ removeSong_menu.add_command (label = "Remove Playlist", command = remove_playlis
 menubar.add_cascade (label = "Remove", menu = removeSong_menu)
 
 # creating list box for the songs
-songlist = Listbox(window, bg = 'black', fg = 'white', selectbackground = "gray", width = 100, height = 15)
-songlist.pack()
+songlist = Listbox(window, bg = 'black', fg = 'white', selectbackground = "gray")
+songlist.pack(fill = BOTH, expand = True)
 
 # import images for buttons
 play_btn_image = PhotoImage(file = 'play.png')
@@ -179,13 +197,13 @@ repeat_btn = Button (control_frame, image = repeat_btn_image, borderwidth = 0, c
 volume_control = ttk.Scale(control_frame, from_ = 1, to = 0, value = 1, orient = HORIZONTAL, length = 125, command = music_volume)
 
 # displaying the buttons on screen
-play_btn.grid (row = 0, column = 2, padx = 7, pady = 10)
-pause_btn.grid (row = 0, column = 3, padx = 7, pady = 10)
-previous_btn.grid (row = 0, column = 1, padx = 7, pady = 10)
-next_btn.grid (row = 0, column = 4, padx = 7, pady = 10)
-shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 10)
-repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 10)
-volume_control.grid (row = 0, column = 6, padx = 7, pady = 10)
+play_btn.grid (row = 0, column = 2, padx = 7, pady = 10, sticky = NSEW)
+pause_btn.grid (row = 0, column = 3, padx = 7, pady = 10, sticky = NSEW)
+previous_btn.grid (row = 0, column = 1, padx = 7, pady = 10, sticky = NSEW)
+next_btn.grid (row = 0, column = 4, padx = 7, pady = 10, sticky = NSEW)
+shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 10, sticky = NSEW)
+repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 10, sticky = NSEW)
+volume_control.grid (row = 0, column = 6, padx = 7, pady = 10, sticky = NSEW)
 
 # runs the application
 window.mainloop()
