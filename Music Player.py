@@ -47,29 +47,54 @@ def song_time ():
 
     current_time = pygame.mixer.music.get_pos() / 1000
 
-    current_song = songs[songlist.curselection()[0]]
-    path = os.path.realpath(current_song) # get filepath of the current song in order to find its total length
-    song = MP3(path)
-    total_length = song.info.length
-    total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))  # converting the time into MINUTES:SECONDS format instead of seconds only
-    
-    current_time += 1 # increases the current time by one second
+    if current_song == songs[songlist.curselection()[-1]]:
+        current_song == songs[songlist.curselection()[-1]]
+        path = os.path.realpath(current_song) # get filepath of the current song in order to find its total length
+        song = MP3(path)
+        total_length = song.info.length
+        total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))  # converting the time into MINUTES:SECONDS format instead of seconds only
+        
+        current_time += 1 # increases the current time by one second
 
-    # if-else conditions for the timebar and the current timestamp of the song that's playing
-    if int(timebar.get()) == int(total_length):
-        time_song.config(text = f'{total_length_cnvrt} / {total_length_cnvrt}')
-    elif paused:
-        pass
-    elif int(timebar.get()) == int(current_time):
-        timebar_position = int(total_length)
-        timebar.config(to = timebar_position, value = int(current_time))
+        # if-else conditions for the timebar and the current timestamp of the song that's playing
+        if int(timebar.get()) == int(total_length):
+            time_song.config(text = f'{total_length_cnvrt} / {total_length_cnvrt}')
+        elif paused:
+            pass
+        elif int(timebar.get()) == int(current_time):
+            timebar_position = int(total_length)
+            timebar.config(to = timebar_position, value = int(current_time))
+        else:
+            timebar_position = int(total_length)
+            timebar.config(to = timebar_position, value = int(timebar.get()))
+            current_time_cnvrt = time.strftime("%M:%S", time.gmtime(int(timebar.get()))) # converting the time into MINUTES:SECONDS format instead of seconds only
+            time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
+            second = int(timebar.get()) + 1
+            timebar.config (value = second)
     else:
-        timebar_position = int(total_length)
-        timebar.config(to = timebar_position, value = int(timebar.get()))
-        current_time_cnvrt = time.strftime("%M:%S", time.gmtime(int(timebar.get()))) # converting the time into MINUTES:SECONDS format instead of seconds only
-        time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
-        second = int(timebar.get()) + 1
-        timebar.config (value = second)
+        current_song == songs[songlist.curselection()[0]]
+        path = os.path.realpath(current_song) # get filepath of the current song in order to find its total length
+        song = MP3(path)
+        total_length = song.info.length
+        total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))  # converting the time into MINUTES:SECONDS format instead of seconds only
+        
+        current_time += 1 # increases the current time by one second
+
+        # if-else conditions for the timebar and the current timestamp of the song that's playing
+        if int(timebar.get()) == int(total_length):
+            time_song.config(text = f'{total_length_cnvrt} / {total_length_cnvrt}')
+        elif paused:
+            pass
+        elif int(timebar.get()) == int(current_time):
+            timebar_position = int(total_length)
+            timebar.config(to = timebar_position, value = int(current_time))
+        else:
+            timebar_position = int(total_length)
+            timebar.config(to = timebar_position, value = int(timebar.get()))
+            current_time_cnvrt = time.strftime("%M:%S", time.gmtime(int(timebar.get()))) # converting the time into MINUTES:SECONDS format instead of seconds only
+            time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
+            second = int(timebar.get()) + 1
+            timebar.config (value = second)
     
     time_song.after(1000, song_time)
 
@@ -148,11 +173,11 @@ def previous_music ():
 
 def next_music ():
     global current_song, paused
-
+    
     try:
         songlist_length = songlist.size()
         if songlist_length-1 == songs.index(current_song):
-            songlist.selection_set (songs.index(0))
+            songlist.selection_set(0)
             current_song = songs[songlist.curselection()[0]]
             play_music() 
         else:
