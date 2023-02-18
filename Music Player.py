@@ -3,6 +3,7 @@
 from tkinter import filedialog
 from tkinter import *
 from tkinter import ttk
+from tkinter.font import Font
 from mutagen.mp3 import MP3
 import pygame
 import os
@@ -15,6 +16,10 @@ window.title('Music Player')
 #window.geometry("450x300")
 window.minsize(width = 450, height = 300) # once program opens, the window size will be this (window can't be smaller than the minsize)
 window.resizable (True, True) # can resize the window according to the user as well as make it fullscreen
+
+# defined font for the program
+textFont = Font (family = "Helvetica", size = 14)
+textFontSmall = Font (family = "Helvetica", size = 10, weight = 'bold')
 
 # initialize pygame music mixer
 pygame.mixer.init()
@@ -83,15 +88,6 @@ def load_music():
     
     songlist.select_set(0) # selecting the first song on the playlist
     current_song = songs[songlist.curselection()[0]]
-
-def add_song ():
-    pass
-    '''
-    global current_song
-    files = filedialog.askopenfilename(initialdir = "/", title = "Select Audio/s", filetypes = (("mp3 File", "*.mp3"), (".wav File", "*.wav")))
-
-    songlist.insert ("end", files)
-    '''
 
 def remove_song ():
     global current_song
@@ -198,25 +194,19 @@ def time_bar (bar):
     pygame.mixer.music.load(current_song)
     pygame.mixer.music.play(start = int(timebar.get()))
 
-
 # select folder menu
-select_menu = Menu(menubar, tearoff = False)
+select_menu = Menu(menubar, tearoff = False, bg = '#304062', fg = 'white', activebackground = '#8bafc5', font = textFontSmall)
 select_menu.add_command(label = 'Select Folder', command = load_music)
 menubar.add_cascade (label = 'Playlist', menu = select_menu)
 
-# manually add songs
-addSong_menu = Menu(menubar, tearoff = False)
-addSong_menu.add_command(label = 'Add Song', command = add_song)
-menubar.add_cascade (label = "Add", menu = addSong_menu)
-
 # remove songs from the playlist/remove entire playlist
-removeSong_menu = Menu (menubar, tearoff = False)
+removeSong_menu = Menu (menubar, tearoff = False, bg = '#304062', fg = 'white', activebackground = '#8bafc5', font = textFontSmall)
 removeSong_menu.add_command (label = "Remove Song", command = remove_song)
 removeSong_menu.add_command (label = "Remove Playlist", command = remove_playlist)
 menubar.add_cascade (label = "Remove", menu = removeSong_menu)
 
 # creating list box for the songs
-songlist = Listbox(window, bg = 'black', fg = 'white', selectbackground = "gray")
+songlist = Listbox(window, bg = '#304062', fg = 'white', selectbackground = "#8bafc5", font = textFont)
 songlist.pack(fill = BOTH, expand = True)
 
 # import images for buttons
@@ -233,14 +223,14 @@ control_frame = Frame(window)
 control_frame.pack()
 
 # creating label for total lenght of the song and its current time
-time_song = Label(window, text = "", bd = 2, anchor = W)
-time_song.pack (fill = X, side = BOTTOM, ipady = 10)
+time_song = Label(window, text = "", bd = 1, anchor = W, bg = "#304062", fg = "white", font = textFontSmall)
+time_song.pack (fill = X, side = BOTTOM, ipady = 1)
 
 
 # creating the buttons themselves inside the frame and making it functional
 play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, command = play_music)
 pause_btn = Button (control_frame, image = pause_btn_image, borderwidth = 0, command = pause_music)
-stop_btn = Button (control_frame, image = stop_btn_image, borderwidth = 0, command = stop_music)
+stop_btn = Button (control_frame, image = stop_btn_image, borderwidth = 0,  command = stop_music)
 previous_btn = Button (control_frame, image = previous_btn_image, borderwidth = 0, command = previous_music)
 next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, command = next_music)
 shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
