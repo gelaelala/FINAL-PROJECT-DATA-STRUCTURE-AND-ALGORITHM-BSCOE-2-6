@@ -14,7 +14,7 @@ import time
 window = Tk()
 window.title('Starccato')
 #window.geometry("450x300")
-window.minsize(width = 450, height = 300) # once program opens, the window size will be this (window can't be smaller than the minsize)
+window.minsize(width = 450, height = 400) # once program opens, the window size will be this (window can't be smaller than the minsize)
 window.resizable (True, True) # can resize the window according to the user as well as make it fullscreen
 
 # icon for the application
@@ -99,9 +99,6 @@ def remove_song ():
     stop_music()
     songlist.delete (ANCHOR)
     pygame.mixer.music.stop()
-    songlist.selection_set (songs.index(current_song) + 1)
-    current_song = songs[songlist.curselection()[0]]
-    play_music()
 
 def remove_playlist ():
     stop_music()
@@ -128,9 +125,6 @@ def play_music ():
     
 def pause_music ():
     global paused 
-
-    if StopMusic:
-        return
 
     pygame.mixer.music.pause()
     paused = True
@@ -181,6 +175,7 @@ def repeat_music ():
     global current_song, paused
 
     pygame.mixer.music.play (-1) # song will be indefinitely repeated
+    RepeatMusic = True
 
 global StopMusic
 StopMusic = False
