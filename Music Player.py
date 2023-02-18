@@ -12,10 +12,14 @@ import time
 
 # creating window for the application
 window = Tk()
-window.title('Music Player')
+window.title('Starccato')
 #window.geometry("450x300")
 window.minsize(width = 450, height = 300) # once program opens, the window size will be this (window can't be smaller than the minsize)
 window.resizable (True, True) # can resize the window according to the user as well as make it fullscreen
+
+# icon for the application
+iconImage = PhotoImage(file = "muplayer icon.png")
+window.iconphoto(False, iconImage)
 
 # defined font for the program
 textFont = Font (family = "Helvetica", size = 14)
