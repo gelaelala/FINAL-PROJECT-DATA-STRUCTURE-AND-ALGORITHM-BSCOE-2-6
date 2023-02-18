@@ -14,7 +14,7 @@ import time
 window = Tk()
 window.title('Starccato')
 #window.geometry("450x300")
-window.minsize(width = 450, height = 400) # once program opens, the window size will be this (window can't be smaller than the minsize)
+window.minsize(width = 500, height = 400) # once program opens, the window size will be this (window can't be smaller than the minsize)
 window.resizable (True, True) # can resize the window according to the user as well as make it fullscreen
 
 # icon for the application
