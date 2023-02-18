@@ -19,7 +19,7 @@ window.resizable (True, True) # can resize the window according to the user as w
 
 # defined font for the program
 textFont = Font (family = "Helvetica", size = 14)
-textFontSmall = Font (family = "Helvetica", size = 10, weight = 'bold')
+textFontSmall = Font (family = "Helvetica", size = 12, weight = 'bold')
 
 # initialize pygame music mixer
 pygame.mixer.init()
@@ -120,17 +120,19 @@ def play_music ():
 
     timebar_position = int(total_length)
     timebar.config(to = timebar_position, value = 0)
+    playing.config(text = f"Now Playing: {current_song}")
     
 def pause_music ():
     global paused 
+
+    if StopMusic:
+        return
+
     pygame.mixer.music.pause()
     paused = True
 
 def previous_music ():
     global current_song, paused
-
-    time_song.config(text = '')
-    timebar.config (value = 0)
 
     try:
         songlist_length = songlist.size()
@@ -222,9 +224,13 @@ repeat_btn_image = PhotoImage(file = "repeat.png")
 control_frame = Frame(window)
 control_frame.pack()
 
+
 # creating label for total lenght of the song and its current time
-time_song = Label(window, text = "", bd = 1, anchor = W, bg = "#304062", fg = "white", font = textFontSmall)
-time_song.pack (fill = X, side = BOTTOM, ipady = 1)
+time_song = Label(window, text = "00:00 | 00:00", bd = 1, fg = "#304062", font = textFontSmall)
+time_song.pack (fill = X, side = RIGHT, ipady = 1)
+
+playing= Label(window, text = f"Please select music first", bd = 1, fg = "#304062", font = textFontSmall)
+playing.pack (fill = X, side = LEFT, ipady = 1)
 
 
 # creating the buttons themselves inside the frame and making it functional
