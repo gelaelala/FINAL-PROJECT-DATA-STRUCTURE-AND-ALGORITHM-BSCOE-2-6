@@ -12,7 +12,8 @@ import time
 # creating window for the application
 window = Tk()
 window.title('Music Player')
-window.geometry("700x300")
+#window.geometry("450x300")
+window.minsize(width = 450, height = 300)
 window.resizable (True, True)
 
 # initialize pygame music mixer
@@ -149,6 +150,10 @@ def repeat_music ():
 def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
 
+def time_bar ():
+    window.after_cancel()
+
+
 # select folder menu
 select_menu = Menu(menubar, tearoff = False)
 select_menu.add_command(label = 'Select Folder', command = load_music)
@@ -195,15 +200,17 @@ next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, comma
 shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
 repeat_btn = Button (control_frame, image = repeat_btn_image, borderwidth = 0, command = repeat_music)
 volume_control = ttk.Scale(control_frame, from_ = 1, to = 0, value = 1, orient = HORIZONTAL, length = 125, command = music_volume)
+timebar = ttk.Scale(control_frame, from_ = 0, to = 100, orient = HORIZONTAL, value = 0, length = 360, command = time_bar)
 
 # displaying the buttons on screen
-play_btn.grid (row = 0, column = 2, padx = 7, pady = 10, sticky = NSEW)
-pause_btn.grid (row = 0, column = 3, padx = 7, pady = 10, sticky = NSEW)
-previous_btn.grid (row = 0, column = 1, padx = 7, pady = 10, sticky = NSEW)
-next_btn.grid (row = 0, column = 4, padx = 7, pady = 10, sticky = NSEW)
-shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 10, sticky = NSEW)
-repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 10, sticky = NSEW)
-volume_control.grid (row = 0, column = 6, padx = 7, pady = 10, sticky = NSEW)
+play_btn.grid (row = 1, column = 2, padx = 7, pady = 10, sticky = NSEW)
+pause_btn.grid (row = 1, column = 3, padx = 7, pady = 10, sticky = NSEW)
+previous_btn.grid (row = 1, column = 1, padx = 7, pady = 10, sticky = NSEW)
+next_btn.grid (row = 1, column = 4, padx = 7, pady = 10, sticky = NSEW)
+shuffle_btn.grid (row = 1, column = 0, padx = 7, pady = 10, sticky = NSEW)
+repeat_btn.grid (row = 1, column = 5, padx = 7, pady = 10, sticky = NSEW)
+volume_control.grid (row = 1, column = 6, padx = 7, pady = 10, sticky = NSEW)
+timebar.grid (row = 0, column = 0, columnspan = 7)
 
 # runs the application
 window.mainloop()
