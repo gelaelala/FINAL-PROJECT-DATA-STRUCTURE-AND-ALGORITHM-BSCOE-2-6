@@ -33,6 +33,9 @@ volume = ''
 def song_time ():
     global current_song, paused, total_length
     
+    if StopMusic:
+        return
+
     current_time = pygame.mixer.music.get_pos() / 1000
 
     current_song = songs[songlist.curselection()[0]]
@@ -93,6 +96,7 @@ def add_song ():
 def remove_song ():
     global current_song
 
+    stop_music()
     songlist.delete (ANCHOR)
     pygame.mixer.music.stop()
     songlist.selection_set (songs.index(current_song) + 1)
@@ -100,11 +104,14 @@ def remove_song ():
     play_music()
 
 def remove_playlist ():
+    stop_music()
     songlist.delete (0, "end")
     pygame.mixer.music.stop ()
 
 def play_music ():
-    global current_song, paused
+    global current_song, paused, StopMusic
+
+    StopMusic = False # Set to False so the song can play as well as the timestamp and timebar will move
 
     if not paused:
         pygame.mixer.music.load(current_song)
@@ -126,6 +133,9 @@ def pause_music ():
 def previous_music ():
     global current_song, paused
 
+    time_song.config(text = '')
+    timebar.config (value = 0)
+
     try:
         songlist_length = songlist.size()
         if songs.index(current_song) == 0:
@@ -146,7 +156,7 @@ def next_music ():
     try:
         songlist_length = songlist.size()
         if songlist_length-1 == songs.index(current_song):
-            songlist.selection_set(0)
+            songlist.selection_set (songs.index(0))
             current_song = songs[songlist.curselection()[0]]
             play_music() 
         else:
@@ -170,10 +180,16 @@ def repeat_music ():
 
     pygame.mixer.music.play (-1) # song will be indefinitely repeated
 
+global StopMusic
+StopMusic = False
+
 def stop_music ():
     time_song.config(text = '')
     timebar.config (value = 0)
     pygame.mixer.music.stop()
+
+    global StopMusic
+    StopMusic = True
     
 def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
