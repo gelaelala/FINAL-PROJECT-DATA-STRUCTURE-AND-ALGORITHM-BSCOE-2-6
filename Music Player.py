@@ -31,18 +31,30 @@ volume = ''
 
 # creating function for getting the total length of the song and to display on screen
 def song_time ():
-    global current_song, paused
+    global current_song, paused, total_length
     
     current_time = pygame.mixer.music.get_pos() / 1000
-    current_time_cnvrt = time.strftime("%M:%S", time.gmtime(current_time))
 
     current_song = songs[songlist.curselection()[0]]
-    path = os.path.realpath(current_song)
+    path = os.path.realpath(current_song) # get filepath of the current song in order to find its total length
     song = MP3(path)
     total_length = song.info.length
-    total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))
+    total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))  # converting the time into MINUTES:SECONDS format instead of seconds only
     
-    time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
+    current_time += 1
+    if int(timebar.get()) == int(total_length):
+        time_song.config(text = f'{total_length_cnvrt} / {total_length_cnvrt}')
+    elif int(timebar.get()) == int(current_time):
+        timebar_position = int(total_length)
+        timebar.config(to = timebar_position, value = int(current_time))
+    else:
+        timebar_position = int(total_length)
+        timebar.config(to = timebar_position, value = int(timebar.get()))
+        current_time_cnvrt = time.strftime("%M:%S", time.gmtime(int(timebar.get()))) # converting the time into MINUTES:SECONDS format instead of seconds only
+        time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
+        second = int(timebar.get()) + 1
+        timebar.config (value = second)
+    
     time_song.after(1000, song_time)
 
 # creating load music command
@@ -98,6 +110,9 @@ def play_music ():
         paused = False
     
     song_time()
+
+    timebar_position = int(total_length)
+    timebar.config(to = timebar_position, value = 0)
     
 def pause_music ():
     global paused 
@@ -155,7 +170,8 @@ def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
 
 def time_bar (bar):
-    pass
+    pygame.mixer.music.load(current_song)
+    pygame.mixer.music.play(start = int(timebar.get()))
 
 
 # select folder menu
