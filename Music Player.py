@@ -13,8 +13,8 @@ import time
 window = Tk()
 window.title('Music Player')
 #window.geometry("450x300")
-window.minsize(width = 450, height = 300)
-window.resizable (True, True)
+window.minsize(width = 450, height = 300) # once program opens, the window size will be this (window can't be smaller than the minsize)
+window.resizable (True, True) # can resize the window according to the user as well as make it fullscreen
 
 # initialize pygame music mixer
 pygame.mixer.init()
@@ -29,29 +29,33 @@ song_number = 0
 paused = False
 volume = ''
 
-'''
 # creating function for getting the total length of the song and to display on screen
-def total_length ():
+def song_time ():
     global current_song, paused
     
-    current_song = songs[songlist.curselection()[0]]
-    song_mp3 = MP3(current_song)
-    song_length = song_mp3.info.length
-    convert_song_length = time.strftime('%M:%S', time.gmtime(song_length))
+    current_time = pygame.mixer.music.get_pos() / 1000
+    current_time_cnvrt = time.strftime("%M:%S", time.gmtime(current_time))
 
-    time_bar.config(text = convert_song_length)
-'''
+    current_song = songs[songlist.curselection()[0]]
+    path = os.path.realpath(current_song)
+    song = MP3(path)
+    total_length = song.info.length
+    total_length_cnvrt = time.strftime("%M:%S", time.gmtime(total_length))
+    
+    time_song.config(text = f'{current_time_cnvrt} / {total_length_cnvrt}')
+    time_song.after(1000, song_time)
 
 # creating load music command
 def load_music():
     global current_song
-    window.directory = filedialog.askdirectory()
+    files = filedialog.askdirectory()
+    os.chdir(files)
 
     """ iterating over files in chosen directory, splitting up filename into the filename itself and filename ext, 
     and if the filename ext is mp3 then add the song into the songs list """
-    for song in os.listdir(window.directory):
-        name, ext = os.path.splitext(song)
-        if ext == '.mp3' or '.wav':
+    for song in os.listdir(files):
+        if song.endswith(".mp3"):
+            realdir = os.path.realpath(song)
             songs.append(song)
 
     # add songs into the listbox
@@ -87,13 +91,13 @@ def play_music ():
     global current_song, paused
 
     if not paused:
-        pygame.mixer.music.load(os.path.join(window.directory, current_song))
+        pygame.mixer.music.load(current_song)
         pygame.mixer.music.play()
     else:
         pygame.mixer.music.unpause()
         paused = False
     
-    #total_length ()
+    song_time()
     
 def pause_music ():
     global paused 
@@ -150,8 +154,8 @@ def repeat_music ():
 def music_volume (vol):
     pygame.mixer.music.set_volume(volume_control.get())
 
-def time_bar ():
-    window.after_cancel()
+def time_bar (bar):
+    pass
 
 
 # select folder menu
@@ -186,11 +190,10 @@ repeat_btn_image = PhotoImage(file = "repeat.png")
 control_frame = Frame(window)
 control_frame.pack()
 
-'''
-# creating frame for total lenght of the song and its current time
-time_bar = Label(window, text = "", padx = 10, anchor = W)
-time_bar.pack(fill = X, side = BOTTOM, pady = 2)
-'''
+# creating label for total lenght of the song and its current time
+time_song = Label(window, text = "", bd = 2, anchor = W)
+time_song.pack (fill = X, side = BOTTOM, ipady = 10)
+
 
 # creating the buttons themselves inside the frame and making it functional
 play_btn = Button (control_frame, image = play_btn_image, borderwidth = 0, command = play_music)
@@ -200,17 +203,17 @@ next_btn = Button (control_frame, image = next_btn_image, borderwidth = 0, comma
 shuffle_btn = Button (control_frame, image = shuffle_btn_image, borderwidth = 0, command = shuffle_music)
 repeat_btn = Button (control_frame, image = repeat_btn_image, borderwidth = 0, command = repeat_music)
 volume_control = ttk.Scale(control_frame, from_ = 1, to = 0, value = 1, orient = HORIZONTAL, length = 125, command = music_volume)
-timebar = ttk.Scale(control_frame, from_ = 0, to = 100, orient = HORIZONTAL, value = 0, length = 360, command = time_bar)
+timebar = ttk.Scale(control_frame, from_ = 0, to = 100, orient = HORIZONTAL, value = 0, length = 430, command = time_bar)
 
 # displaying the buttons on screen
-play_btn.grid (row = 1, column = 2, padx = 7, pady = 10, sticky = NSEW)
-pause_btn.grid (row = 1, column = 3, padx = 7, pady = 10, sticky = NSEW)
-previous_btn.grid (row = 1, column = 1, padx = 7, pady = 10, sticky = NSEW)
-next_btn.grid (row = 1, column = 4, padx = 7, pady = 10, sticky = NSEW)
-shuffle_btn.grid (row = 1, column = 0, padx = 7, pady = 10, sticky = NSEW)
-repeat_btn.grid (row = 1, column = 5, padx = 7, pady = 10, sticky = NSEW)
-volume_control.grid (row = 1, column = 6, padx = 7, pady = 10, sticky = NSEW)
-timebar.grid (row = 0, column = 0, columnspan = 7)
+play_btn.grid (row = 0, column = 2, padx = 7, pady = 15, sticky = NSEW)
+pause_btn.grid (row = 0, column = 3, padx = 7, pady = 15, sticky = NSEW)
+previous_btn.grid (row = 0, column = 1, padx = 7, pady = 15, sticky = NSEW)
+next_btn.grid (row = 0, column = 4, padx = 7, pady = 15, sticky = NSEW)
+shuffle_btn.grid (row = 0, column = 0, padx = 7, pady = 15, sticky = NSEW)
+repeat_btn.grid (row = 0, column = 5, padx = 7, pady = 15, sticky = NSEW)
+volume_control.grid (row = 0, column = 6, padx = 7, pady = 15, sticky = NSEW)
+timebar.grid (row = 1, column = 0, columnspan = 7, pady = 10)
 
 # runs the application
 window.mainloop()
